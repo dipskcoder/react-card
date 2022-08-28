@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import ListCard from "./components/ListCard";
 
 function App() {
+  const [planetsData, setPlanetsData] = useState();
+
+  useEffect(() => {
+    fetch("https://swapi.dev/api/planets")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.results);
+        const planetdata = data.results.filter((v) => v.films.length > 1);
+        setPlanetsData(planetdata);
+      });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {planetsData?.map((v) => (
+        <ListCard planetdata={v} />
+      ))}
     </div>
   );
 }
